@@ -121,6 +121,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            applicationIdSuffix = ".zerox5"
+            versionNameSuffix = "-zerox5"
+            resValue("string", "app_name", "Hanako X (zerox5)")
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true

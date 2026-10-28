@@ -5,6 +5,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.RemoteException
 import android.util.Log
+import `fun`.kirari.hanako.BuildConfig
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeout
 import rikka.shizuku.Shizuku
@@ -44,7 +45,7 @@ internal object ShizukuUserServiceClient {
     private var activeConnection: ServiceConnection? = null
 
     private val userServiceArgs = Shizuku.UserServiceArgs(
-        ComponentName("fun.kirari.hanako", ShizukuShellService::class.java.name)
+        ComponentName(BuildConfig.APPLICATION_ID, ShizukuShellService::class.java.name)
     )
         .processNameSuffix("capture")
         .tag("hanako-shizuku-shell")
