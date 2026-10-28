@@ -322,6 +322,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         appUpdateController.showDialog()
     }
 
+    fun checkForUpdates() {
+        appUpdateController.checkManually()
+    }
+
     fun dismissUpdateDialog() {
         appUpdateController.dismissDialog()
     }

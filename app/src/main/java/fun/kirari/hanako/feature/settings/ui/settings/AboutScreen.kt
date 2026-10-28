@@ -17,8 +17,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.SystemUpdate
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +36,11 @@ private const val HANAKO_X_PROJECT_URL = "https://github.com/ZEROINININIo/Hanako
 private const val ORIGINAL_PROJECT_URL = "https://github.com/zyf2007/HanakoAI"
 
 @Composable
-fun AboutScreen() {
+fun AboutScreen(
+    checkingForUpdates: Boolean,
+    updateStatusMessage: String?,
+    onCheckForUpdates: () -> Unit
+) {
     val context = LocalContext.current
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -69,6 +76,38 @@ fun AboutScreen() {
                 icon = Icons.Default.Person,
                 onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(HANAKO_X_PROJECT_URL))) }
             )
+        }
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = onCheckForUpdates,
+                    enabled = !checkingForUpdates
+                ) {
+                    if (checkingForUpdates) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(18.dp),
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Icon(Icons.Default.SystemUpdate, contentDescription = null)
+                    }
+                    Text(
+                        if (checkingForUpdates) "正在检查更新…" else "检查更新",
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+                updateStatusMessage?.let { message ->
+                    Text(
+                        message,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
         }
         item {
             AboutCreditCard(

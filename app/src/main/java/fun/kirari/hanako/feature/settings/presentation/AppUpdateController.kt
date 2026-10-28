@@ -11,7 +11,9 @@ import kotlinx.coroutines.launch
 
 data class AppUpdateUiState(
     val availableUpdate: AppUpdateInfo? = null,
-    val dialogVisible: Boolean = false
+    val dialogVisible: Boolean = false,
+    val checking: Boolean = false,
+    val statusMessage: String? = null
 )
 
 internal class AppUpdateController(
@@ -29,6 +31,29 @@ internal class AppUpdateController(
             val update = appUpdateApi.checkForUpdate()
             if (update != null) {
                 _state.update { it.copy(availableUpdate = update, dialogVisible = true) }
+            }
+        }
+    }
+
+    fun checkManually() {
+        if (_state.value.checking) return
+        _state.update { it.copy(checking = true, statusMessage = null) }
+        scope.launch {
+            val update = appUpdateApi.checkForUpdate()
+            _state.update {
+                if (update != null) {
+                    it.copy(
+                        availableUpdate = update,
+                        dialogVisible = true,
+                        checking = false,
+                        statusMessage = "发现新版本 ${update.version}"
+                    )
+                } else {
+                    it.copy(
+                        checking = false,
+                        statusMessage = "暂未发现新版本；如果网络无法访问 GitHub，也可能无法完成检查。"
+                    )
+                }
             }
         }
     }

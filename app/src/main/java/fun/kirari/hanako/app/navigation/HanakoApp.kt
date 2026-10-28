@@ -691,7 +691,11 @@ fun HanakoApp(viewModel: AppViewModel) {
                         )
                     }
                     composable(ROUTE_SETTINGS_ABOUT) {
-                        AboutScreen()
+                        AboutScreen(
+                            checkingForUpdates = appUpdateState.checking,
+                            updateStatusMessage = appUpdateState.statusMessage,
+                            onCheckForUpdates = viewModel::checkForUpdates
+                        )
                     }
                 }
             }
