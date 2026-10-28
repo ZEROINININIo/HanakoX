@@ -116,7 +116,7 @@ private fun HistoryEntryCard(onOpenHistory: () -> Unit) {
             .fillMaxWidth()
             .clickable(onClick = onOpenHistory),
         shape = RoundedCornerShape(24.dp),
-        color = MaterialTheme.colorScheme.surfaceContainer,
+        color = MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.88f),
         contentColor = MaterialTheme.colorScheme.onSurface
     ) {
         Row(

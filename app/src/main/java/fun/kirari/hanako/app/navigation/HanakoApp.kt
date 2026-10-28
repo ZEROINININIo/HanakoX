@@ -291,7 +291,9 @@ fun HanakoApp(viewModel: AppViewModel) {
                     enter = slideInVertically { it } + fadeIn(),
                     exit = shrinkVertically() + fadeOut()
                 ) {
-                    NavigationBar {
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.92f)
+                    ) {
                         Screen.entries.forEach { screen ->
                             NavigationBarItem(
                                 selected = currentScreen == screen,

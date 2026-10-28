@@ -64,8 +64,10 @@ fun HeroSection(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(28.dp),
-        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.95f),
-        tonalElevation = 2.dp
+        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.86f),
+        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+        border = BorderStroke(1.dp, androidx.compose.ui.graphics.Color.White.copy(alpha = 0.78f)),
+        tonalElevation = 5.dp
     ) {
         Column(
             modifier = Modifier
