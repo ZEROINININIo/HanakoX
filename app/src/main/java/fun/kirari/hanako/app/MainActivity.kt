@@ -9,6 +9,11 @@ import androidx.activity.viewModels
 import `fun`.kirari.hanako.app.navigation.HanakoApp
 import `fun`.kirari.hanako.app.navigation.AppViewModel
 import `fun`.kirari.hanako.core.ui.theme.HanakoTheme
+import `fun`.kirari.hanako.feature.settings.ui.settings.DisclaimerConfirmationGate
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<AppViewModel>()
@@ -30,7 +35,23 @@ class MainActivity : ComponentActivity() {
         consumeKirariRedirect(intent)
         setContent {
             HanakoTheme {
-                HanakoApp(viewModel)
+                val disclaimerPreferences = remember {
+                    this@MainActivity.getSharedPreferences(
+                        "hanako_x_disclaimer",
+                        android.content.Context.MODE_PRIVATE
+                    )
+                }
+                var disclaimerAccepted by remember {
+                    mutableStateOf(disclaimerPreferences.getBoolean("accepted", false))
+                }
+                if (disclaimerAccepted) {
+                    HanakoApp(viewModel)
+                } else {
+                    DisclaimerConfirmationGate {
+                        disclaimerPreferences.edit().putBoolean("accepted", true).apply()
+                        disclaimerAccepted = true
+                    }
+                }
             }
         }
     }
