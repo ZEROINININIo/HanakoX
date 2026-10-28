@@ -87,6 +87,25 @@ fun AboutScreen() {
                 modifier = Modifier.padding(top = 4.dp)
             )
         }
+        item {
+            Surface(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(22.dp),
+                color = MaterialTheme.colorScheme.surfaceContainer
+            ) {
+                Column(
+                    modifier = Modifier.padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Text("免责声明", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        "本应用提供的 AI 回答仅供学习与参考，可能存在错误或不完整内容，请自行核实并对使用结果负责。请遵守学校、考试及相关平台规则，不要将本应用用于违规作弊或其他不当用途。",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            }
+        }
     }
 }
 
