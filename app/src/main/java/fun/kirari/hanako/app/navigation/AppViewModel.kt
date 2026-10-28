@@ -107,7 +107,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         syncLocalOcrInstallation()
-        syncKirariSessionStatus()
+        if (BuildConfig.SHOW_KIRARI_ENTRY) {
+            syncKirariSessionStatus()
+        }
         appUpdateController.checkOnceSilently()
     }
 

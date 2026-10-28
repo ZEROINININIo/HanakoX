@@ -100,8 +100,8 @@ internal class AppUpdateApi(
     }
 
     private companion object {
-        private const val LATEST_RELEASE_URL = "https://api.github.com/repos/zyf2007/HanakoAI/releases/latest"
-        private const val README_RAW_URL = "https://raw.githubusercontent.com/zyf2007/HanakoAI/main/README.md"
+        private const val LATEST_RELEASE_URL = "https://api.github.com/repos/ZEROINININIo/HanakoX/releases/latest"
+        private const val README_RAW_URL = "https://raw.githubusercontent.com/ZEROINININIo/HanakoX/main/README.md"
         private const val TIMEOUT_MILLIS = 12_000L
     }
 }

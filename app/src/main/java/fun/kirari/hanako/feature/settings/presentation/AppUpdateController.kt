@@ -28,7 +28,7 @@ internal class AppUpdateController(
         scope.launch {
             val update = appUpdateApi.checkForUpdate()
             if (update != null) {
-                _state.update { it.copy(availableUpdate = update) }
+                _state.update { it.copy(availableUpdate = update, dialogVisible = true) }
             }
         }
     }

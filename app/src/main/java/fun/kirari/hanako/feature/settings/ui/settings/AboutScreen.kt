@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import `fun`.kirari.hanako.BuildConfig
 
-private const val ZER0X5_URL = "https://github.com/zerox5"
+private const val HANAKO_X_PROJECT_URL = "https://github.com/ZEROINININIo/HanakoX"
 private const val ORIGINAL_PROJECT_URL = "https://github.com/zyf2007/HanakoAI"
 
 @Composable
@@ -64,10 +64,10 @@ fun AboutScreen() {
         item {
             AboutCreditCard(
                 title = "二改作者",
-                name = "zerox5",
-                description = "Hanako X 的改进与维护",
+                name = "zerox5 · HanakoX",
+                description = "二改项目页、源代码与版本发布",
                 icon = Icons.Default.Person,
-                onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(ZER0X5_URL))) }
+                onClick = { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(HANAKO_X_PROJECT_URL))) }
             )
         }
         item {
