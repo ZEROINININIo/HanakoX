@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Hanako X</string>
+    <string name="overlay_notification_title">Hanako X 悬浮球运行中</string>
+    <string name="overlay_notification_text">普通模式点击后框选，自动模式点击后整屏直送 AI</string>
+    <string name="capture_notification_title">Hanako X 正在准备屏幕捕捉</string>
+    <string name="capture_notification_text">请在系统弹窗中允许屏幕共享</string>
+    <string name="overlay_automation_done_title">Hanako X 自动模式已完成</string>
+</resources>

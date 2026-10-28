@@ -1,0 +1,25 @@
+*.iml
+.gradle
+.kotlin
+.idea/
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.marscode/
+.DS_Store
+.vscode/
+/build
+**/build/
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+keystore.properties
+/release.jks
+/outputs/
+# 开发计划文档仅供本地协作，不需要同步
+docs/*.md

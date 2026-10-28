@@ -1,0 +1,234 @@
+package `fun`.kirari.hanako.feature.settings.ui.provider
+
+import `fun`.kirari.hanako.feature.settings.ui.settings.DeleteConfirmDialog
+
+
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.compose.ui.unit.dp
+import `fun`.kirari.hanako.core.data.AppSettings
+import `fun`.kirari.hanako.core.data.KIRARI_PROVIDER_ID
+import `fun`.kirari.hanako.core.data.ModelProviderConfig
+import `fun`.kirari.hanako.core.data.availableProviders
+import `fun`.kirari.hanako.core.data.displayName
+import `fun`.kirari.hanako.core.data.isProtectedKirariProvider
+import `fun`.kirari.hanako.feature.home.presentation.RegisterScrollToTopHandler
+import `fun`.kirari.hanako.feature.settings.presentation.ConnectionTestState
+import `fun`.kirari.hanako.feature.settings.presentation.KirariAccountState
+import `fun`.kirari.hanako.feature.settings.presentation.ProviderMetaState
+import kotlinx.coroutines.launch
+
+@Composable
+fun ProviderSettingsScreen(
+    scrollRoute: String,
+    settings: AppSettings,
+    onAddProvider: () -> Unit,
+    onDeleteProvider: (String) -> Unit,
+    onOpenProvider: (String) -> Unit
+) {
+    var deleteTargetId by remember { mutableStateOf<String?>(null) }
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+    RegisterScrollToTopHandler(route = scrollRoute) {
+        coroutineScope.launch {
+            listState.animateScrollToItem(0)
+        }
+    }
+
+    LazyColumn(
+        state = listState,
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "模型提供方",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                TextButton(onClick = onAddProvider) {
+                    Text("新增")
+                }
+            }
+        }
+        items(settings.availableProviders(), key = { it.id }) { provider ->
+            ProviderListItem(
+                provider = provider,
+                onOpenProvider = onOpenProvider,
+                onRequestDelete = { deleteTargetId = it }
+            )
+        }
+        item { Spacer(modifier = Modifier.height(80.dp)) }
+    }
+
+    val deleteTarget = settings.availableProviders().firstOrNull { it.id == deleteTargetId }
+    if (deleteTarget != null) {
+        DeleteConfirmDialog(
+            title = "删除提供方",
+            message = "确认删除 ${deleteTarget.name}？",
+            onDismiss = { deleteTargetId = null },
+            onConfirm = {
+                onDeleteProvider(deleteTarget.id)
+                deleteTargetId = null
+            }
+        )
+    }
+}
+
+@Composable
+fun ProviderDetailScreen(
+    provider: ModelProviderConfig,
+    connectionTestState: ConnectionTestState,
+    providerMetaState: ProviderMetaState,
+    kirariAccountState: KirariAccountState,
+    hasKirariClientId: Boolean,
+    onUpdateProvider: (ModelProviderConfig) -> Unit,
+    onViewModels: () -> Unit,
+    onTestConnection: (ModelProviderConfig) -> Unit,
+    onClearConnectionTest: () -> Unit,
+    onLoadProviderMeta: (ModelProviderConfig) -> Unit,
+    onClearProviderMeta: () -> Unit,
+    shouldSuggestKirariAutoSetup: Boolean,
+    onApplyKirariAutoSetup: () -> Unit,
+    onLoginKirari: () -> Unit,
+    onLogoutKirari: () -> Unit
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(provider.id) {
+        onDispose {
+            onClearConnectionTest()
+            onClearProviderMeta()
+        }
+    }
+    LaunchedEffect(provider.id) {
+        if (provider.id == KIRARI_PROVIDER_ID) {
+            onLoadProviderMeta(provider)
+        }
+    }
+    DisposableEffect(lifecycleOwner, provider.id) {
+        if (provider.id != KIRARI_PROVIDER_ID) {
+            onDispose { }
+        } else {
+            val observer = LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_RESUME) {
+                    onLoadProviderMeta(provider)
+                }
+            }
+            lifecycleOwner.lifecycle.addObserver(observer)
+            onDispose {
+                lifecycleOwner.lifecycle.removeObserver(observer)
+            }
+        }
+    }
+
+    if (provider.id == KIRARI_PROVIDER_ID) {
+        KirariProviderDetailScreen(
+            provider = provider,
+            providerMetaState = providerMetaState,
+            kirariAccountState = kirariAccountState,
+            connectionTestState = connectionTestState,
+            hasKirariClientId = hasKirariClientId,
+            shouldSuggestAutoSetup = shouldSuggestKirariAutoSetup,
+            onApplyAutoSetup = onApplyKirariAutoSetup,
+            onViewModels = onViewModels,
+            onTestConnection = onTestConnection,
+            onLoginKirari = onLoginKirari,
+            onLogoutKirari = onLogoutKirari
+        )
+    } else {
+        GenericProviderDetailScreen(
+            provider = provider,
+            connectionTestState = connectionTestState,
+            onUpdateProvider = onUpdateProvider,
+            onViewModels = onViewModels,
+            onTestConnection = onTestConnection
+        )
+    }
+}
+
+@Composable
+private fun ProviderListItem(
+    provider: ModelProviderConfig,
+    onOpenProvider: (String) -> Unit,
+    onRequestDelete: (String) -> Unit
+) {
+    Surface(
+        modifier = Modifier.combinedClickable(
+            onClick = { onOpenProvider(provider.id) },
+            onLongClick = {
+                if (!isProtectedKirariProvider(provider.id)) {
+                    onRequestDelete(provider.id)
+                }
+            }
+        ),
+        shape = RoundedCornerShape(20.dp),
+        color = MaterialTheme.colorScheme.surfaceContainerLow
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            androidx.compose.foundation.layout.Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    provider.name,
+                    style = MaterialTheme.typography.titleSmall,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    provider.kind.displayName,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            androidx.compose.material3.Icon(
+                Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.outline
+            )
+        }
+    }
+}
