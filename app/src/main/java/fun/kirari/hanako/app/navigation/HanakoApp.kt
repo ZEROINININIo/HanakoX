@@ -24,6 +24,7 @@ import `fun`.kirari.hanako.feature.settings.ui.provider.ProviderSettingsScreen
 import `fun`.kirari.hanako.feature.settings.ui.search.WebSearchSettingsScreen
 import `fun`.kirari.hanako.feature.settings.ui.settings.MoreSettingsScreen
 import `fun`.kirari.hanako.feature.settings.ui.settings.SettingsMenuScreen
+import `fun`.kirari.hanako.feature.settings.ui.settings.AboutScreen
 import `fun`.kirari.hanako.feature.settings.ui.update.AppUpdateDialog
 
 import android.content.Intent
@@ -379,7 +380,8 @@ fun HanakoApp(viewModel: AppViewModel) {
                                     onNavigateWebSearch = { navController.navigate(ROUTE_SETTINGS_WEB_SEARCH) },
                                     onNavigateAssistant = { navController.navigate(ROUTE_SETTINGS_ASSISTANT) },
                                     onNavigateMore = { navController.navigate(ROUTE_SETTINGS_MORE) },
-                                    onNavigateDebugLogs = { navController.navigate(ROUTE_SETTINGS_DEBUG_LOGS) }
+                                    onNavigateDebugLogs = { navController.navigate(ROUTE_SETTINGS_DEBUG_LOGS) },
+                                    onNavigateAbout = { navController.navigate(ROUTE_SETTINGS_ABOUT) }
                                 )
                             }
                         )
@@ -687,6 +689,9 @@ fun HanakoApp(viewModel: AppViewModel) {
                         DebugLogScreen(
                             onClearLogs = viewModel::clearDebugLogs
                         )
+                    }
+                    composable(ROUTE_SETTINGS_ABOUT) {
+                        AboutScreen()
                     }
                 }
             }

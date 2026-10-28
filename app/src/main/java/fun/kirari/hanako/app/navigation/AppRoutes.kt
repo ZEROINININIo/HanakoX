@@ -15,6 +15,7 @@ internal const val ROUTE_SETTINGS_ASSISTANT_DETAIL = "settings_assistant_detail"
 internal const val ROUTE_SETTINGS_MORE = "settings_more"
 internal const val ROUTE_SETTINGS_STATIC_VIBRATION = "settings_static_vibration"
 internal const val ROUTE_SETTINGS_DEBUG_LOGS = "settings_debug_logs"
+internal const val ROUTE_SETTINGS_ABOUT = "settings_about"
 internal const val ARG_PROVIDER_ID = "providerId"
 internal const val ARG_ASSISTANT_ID = "assistantId"
 internal const val ARG_HISTORY_ID = "historyId"
@@ -39,6 +40,7 @@ internal fun appTitle(route: String?, currentScreen: Screen): String = when (rou
     ROUTE_SETTINGS_MORE -> "更多"
     ROUTE_SETTINGS_STATIC_VIBRATION -> "静态模式振动"
     ROUTE_SETTINGS_DEBUG_LOGS -> "调试日志"
+    ROUTE_SETTINGS_ABOUT -> "关于 Hanako X"
     null -> currentScreen.title
     else -> when {
         route.startsWith("$ROUTE_HANAKO_HISTORY_DETAIL/") -> "历史详情"

@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Build
 import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Memory
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
@@ -37,7 +38,8 @@ fun SettingsMenuScreen(
     onNavigateWebSearch: () -> Unit,
     onNavigateAssistant: () -> Unit,
     onNavigateMore: () -> Unit,
-    onNavigateDebugLogs: () -> Unit
+    onNavigateDebugLogs: () -> Unit,
+    onNavigateAbout: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -82,6 +84,14 @@ fun SettingsMenuScreen(
                 subtitle = "自动模式、屏幕录制方式、网络兼容",
                 icon = Icons.Default.SmartToy,
                 onClick = onNavigateMore
+            )
+        }
+        item {
+            SettingsEntryCard(
+                title = "关于 Hanako X",
+                subtitle = "版本信息、项目来源与作者",
+                icon = Icons.Default.Info,
+                onClick = onNavigateAbout
             )
         }
         item {
